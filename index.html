@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Assignment A</title>
+        <title>Jacob_Le_HW1</title>
         <meta charset="utf-8">
         <style>
             body {
@@ -44,55 +44,62 @@
 
 				scene = new THREE.Scene();
 
+				var material1, material2, material3;
+
+				// lights
+
+				var ambient = new THREE.Vector3(0.1,0.1,0.1);
+
+				var light1_pos = new THREE.Vector3(0.0,10.0,0.0); //from above
+				var light1_diffuse = new THREE.Vector3(1.0,0.0,0.0);
+				var light1_specular = new THREE.Vector3(1.0,1.0,1.0);
+			
+				var light2_pos = new THREE.Vector3(-10.0,0.0,0.0); //from the left
+				var light2_diffuse = new THREE.Vector3(0.0,0.0,1.0);
+				var light2_specular = new THREE.Vector3(1.0,1.0,1.0);
+				
+				var light2_pos = new THREE.Vector3(-10.0,0.0,0.0); //from the left
+				var light2_diffuse = new THREE.Vector3(0.0,0.0,1.0);
+				var light2_specular = new THREE.Vector3(1.0,1.0,1.0);
+
 				// geometry
 
 				var geometry1 = new THREE.BoxGeometry( 1, 1, 1 );	    
 				var geometry2 = new THREE.SphereGeometry( 1, 64, 64 );
 				var geometry3 = new THREE.TorusKnotGeometry( 0.5, 0.15, 100, 16 );
 
-                // lights
-
-				var light1 = new THREE.PointLight(0xff0000, 1, 100, 2);
-				var light2 = new THREE.PointLight(0x00ff00, 1, 100, 2);
-				var light3 = new THREE.PointLight(0x0000ff, 1, 100, 2);
-
 				// material
 
-     				var material1 = new THREE.RawShaderMaterial( {
+				var uniforms =  {
+            		ambient: { type: "v3", value: ambient },
+            		light1_pos: { type: "v3", value: light1_pos },
+            		light1_diffuse: { type: "v3", value: light1_diffuse },
+            		light1_specular:  { type: "v3", value: light1_specular },
+            		light2_pos: { type: "v3", value: light2_pos },
+            		light2_diffuse: { type: "v3", value: light2_diffuse },
+            		light2_specular:  { type: "v3", value: light2_specular },
+					light3_pos: { type: "v3", value: light3_pos },
+            		light3_diffuse: { type: "v3", value: light3_diffuse },
+            		light3_specular:  { type: "v3", value: light3_specular },
+				};
 
-					uniforms: {
-						time: { type: "f", value: 1.0 },
-            					my_color: { type: "v4", value: new THREE.Vector4(1.0,1.0,0.0,1.0) }
-					},
+     			var material1 = new THREE.RawShaderMaterial( {
+					uniforms: uniforms,
 					vertexShader: vs,
 					fragmentShader: fs,
-				
 				} );
 
-
-        			var material2 = new THREE.RawShaderMaterial( {
-
-					uniforms: {
-						time: { type: "f", value: 1.0 },
-            					my_color: { type: "v4", value: new THREE.Vector4(0.0,0.0,0.0,1.0) }
-					},
+        		var material2 = new THREE.RawShaderMaterial( {
+					uniforms: uniforms,
 					vertexShader: vs,
 					fragmentShader: fs,
-				
         			} );
 
 				var material3 = new THREE.RawShaderMaterial( {
-
-					uniforms: {
-						time: { type: "f", value: 1.0 },
-            					my_color: { type: "v4", value: new THREE.Vector4(0.0,0.5,1.0,1.0) }
-					},
+					uniforms: uniforms,
 					vertexShader: vs,
 					fragmentShader: fs,
-				
         			} );
-
-
 
 
 				var mesh1 = new THREE.Mesh( geometry1, material1 );
@@ -107,7 +114,6 @@
 				var mesh3 = new THREE.Mesh( geometry3, material3 );
 			  	mesh3.translateX(2.0);
        				scene.add( mesh3 );
-
 
 				renderer = new THREE.WebGLRenderer();
 				renderer.setClearColor( 0x999999 );
