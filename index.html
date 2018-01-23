@@ -58,9 +58,9 @@
 				var light2_diffuse = new THREE.Vector3(0.0,0.0,1.0);
 				var light2_specular = new THREE.Vector3(1.0,1.0,1.0);
 				
-				var light2_pos = new THREE.Vector3(-10.0,0.0,0.0); //from the left
-				var light2_diffuse = new THREE.Vector3(0.0,0.0,1.0);
-				var light2_specular = new THREE.Vector3(1.0,1.0,1.0);
+				var light3_pos = new THREE.Vector3(-10.0,0.0,0.0); //from the left
+				var light3_diffuse = new THREE.Vector3(0.0,0.0,1.0);
+				var light3_specular = new THREE.Vector3(1.0,1.0,1.0);
 
 				// geometry
 
@@ -146,7 +146,6 @@
 				var object1 = scene.children[ 0 ];
 				object1.rotation.x = time * 0.0009;
 				object1.rotation.y = time * 0.0005;
-				object1.material.uniforms.time.value = time * 0.005;
 
         			var object2 = scene.children[ 1 ];
 				object2.rotation.x = time * 0.0005;
