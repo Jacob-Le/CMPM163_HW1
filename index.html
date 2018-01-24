@@ -34,9 +34,9 @@
 			uniform vec3 light2_pos;
 			uniform vec3 light3_pos;
 
-			uniform float time; 
+			//uniform float time; 
 
-			varying vec3 N, L1, L2, V;
+			varying vec3 N, L1, L2, L3, V;
 
 			void main() {
 
@@ -71,7 +71,7 @@
 	<script id="fragmentShader" type="x-shader/x-fragment">
 			precision mediump float;
 			
-			varying vec3 V, N, L1, L2;
+			varying vec3 V, N, L1, L2, L3;
 			float spec_intensity = 32.0; //higher value indicates more rapid falloff
 
 			uniform float time; 
@@ -136,6 +136,10 @@
 		var vs = document.getElementById('vertexShader').textContent;
 		var fs = document.getElementById('fragmentShader').textContent;
 
+		var light1_pos, light2_pos, light3_pos;
+		var light1_diffuse, light2_diffuse, light3_diffuse;
+		var light1_specular, light2_specular, light3_specular;
+
 
 		init();
 		animate();
@@ -155,17 +159,17 @@
 
 			var ambient = new THREE.Vector3(0.1, 0.1, 0.1);
 
-			var light1_pos = new THREE.Vector3(0.0, 10.0, 0.0); //from above
-			var light1_diffuse = new THREE.Vector3(1.0, 0.0, 0.0);
-			var light1_specular = new THREE.Vector3(1.0, 1.0, 1.0);
+			light1_pos = new THREE.Vector3(0.0, 10.0, 0.0); //from above
+			light1_diffuse = new THREE.Vector3(1.0, 0.0, 0.0);
+			light1_specular = new THREE.Vector3(1.0, 1.0, 1.0);
 
-			var light2_pos = new THREE.Vector3(-10.0, 0.0, 0.0); //from the left
-			var light2_diffuse = new THREE.Vector3(0.0, 0.0, 1.0);
-			var light2_specular = new THREE.Vector3(1.0, 1.0, 1.0);
+			light2_pos = new THREE.Vector3(-10.0, 0.0, 0.0); //from the left
+			light2_diffuse = new THREE.Vector3(0.0, 0.0, 1.0);
+			light2_specular = new THREE.Vector3(1.0, 1.0, 1.0);
 
-			var light3_pos = new THREE.Vector3(-10.0, 0.0, 0.0); //from the left
-			var light3_diffuse = new THREE.Vector3(0.0, 0.0, 1.0);
-			var light3_specular = new THREE.Vector3(1.0, 1.0, 1.0);
+			light3_pos = new THREE.Vector3(-10.0, 0.0, 0.0); //from the left
+			light3_diffuse = new THREE.Vector3(0.0, 0.0, 1.0);
+			light3_specular = new THREE.Vector3(1.0, 1.0, 1.0);
 
 			// geometry
 
@@ -270,15 +274,13 @@
 			object3.rotation.y = time * 0.0003;
 			object3.material.uniforms.time.value = time * 0.003;
 
-			var point1 = scene.children[3];
-			point1.position.x = 0.01 * Math.cos(time);
+			light1_pos.x = 0.01 * Math.cos(time);
 
-			var point2 = scene.children[4];
-			point2.position.y = 0.02 * Math.sin(time);
+			light2_pos.y = 0.02 * Math.sin(time);
 
-			var point3 = scene.children[5];
-			point3.position.x = 0.2 * Math.sin(time);
-			point3.position.y = 0.2 * Math.cos(time);
+			light3_pos.x = 0.2 * Math.sin(time);
+			light3_pos.y = 0.2 * Math.cos(time);
+			light3_pos.z = 0.2 * Math.tan(time);
 
 			renderer.render(scene, camera);
 		}
