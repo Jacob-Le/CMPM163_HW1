@@ -184,6 +184,8 @@
 
 				unique_mesh = new THREE.Mesh( useGeometry, useMaterial );
 
+				unique_mesh.name = "unique_mesh";
+
 				//positioning and scaling blender obj so that it's in the center of the screen
 				unique_mesh.position.set( 3, -1.5, 0 );
 				var s = 0.4;
@@ -270,6 +272,10 @@
 			object3.rotation.z = time * 0.0007;
 			object3.rotation.y = time * 0.0003;
 			object3.material.uniforms.time.value = time * 0.003;
+
+			var unique_obj = scene.getObjectByName("unique_mesh");
+			unique_obj.rotation.z = time * 0.0007;
+			unique_obj.rotation.y = time * 0.0003;
 
 			//Change lights
 			light1_pos.x = 0.1 * Math.cos(time);
