@@ -278,21 +278,21 @@
 
 			var ambient = new THREE.Vector3(0.1, 0.1, 0.1);
 
-			light1_pos = new THREE.Vector3(0.0, 10.0, 0.0); //from above
+			light1_pos = new THREE.Vector3(0.0, 7.0, 0.0); //from above
 			light1_diffuse = new THREE.Vector3(1.0, 0.0, 0.0);
 			light1_specular = new THREE.Vector3(1.0, 1.0, 1.0);
 
-			light2_pos = new THREE.Vector3(-10.0, 0.0, 0.0); //from the left
+			light2_pos = new THREE.Vector3(-7.0, 0.0, 0.0); //from the left
 			light2_diffuse = new THREE.Vector3(0.0, 0.0, 1.0);
 			light2_specular = new THREE.Vector3(1.0, 1.0, 1.0);
 
-			point_light = new THREE.PointLight(0xdcf9d6, 1, 50, 2);
+			point_light = new THREE.PointLight(0xdcf9d6, 1, 50, 1);
 			point_light.position.set(10, 10, 10);
 			scene.add(point_light);
 
 			// geometry
 			//-------------Object 1: Cube w/ Phong shader--------------//
-			var geometry1 = new THREE.BoxGeometry(1, 1, 1);
+			var geometry1 = new THREE.SphereGeometry(1, 32, 32);
 
 			var uniforms = {
 				ambient: { type: "v3", value: ambient },
@@ -356,9 +356,8 @@
 				light2_diffuse: { type: "v3", value: light2_diffuse },
 				light2_specular: { type: "v3", value: light2_specular },
 				t1: { type: "t", value: texture  },
-				mixVal: {type: "f", value: 0.2},
+				mixVal: {type: "f", value: 0.0},
 			};
-		
 
 			var texMaterial = new THREE.RawShaderMaterial( {
 				uniforms: uniforms,
@@ -439,9 +438,9 @@
 			unique_obj.rotation.y = time * 0.0003;
 
 			//Change lights
-			light1_pos.x = 0.1 * Math.cos(5*time);
-			light2_pos.y = 0.2 * Math.sin(5*time);
-			point_light.position.set(0.1 * Math.sin(5*time), 0.3 * Math.sin(5*time), 0.2 * Math.cos(5*time));
+			light1_pos.x = 2 * Math.cos(5*time);
+			light2_pos.y = 3 * Math.sin(5*time);
+			point_light.position.set(0.1 * Math.sin(3*time), 0.3 * Math.sin(3*time), 0);
 
 			renderer.render(scene, camera);
 		}
