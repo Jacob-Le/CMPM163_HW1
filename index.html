@@ -69,8 +69,6 @@
 		varying vec3 V, N, L1, L2, L3;
 		float spec_intensity = 32.0; //higher value indicates more rapid falloff
 		
-		uniform float time; 
-		
 		uniform vec3 ambient; //general ambient light in the scene applied to all objects
 		
 		uniform vec3 light1_diffuse;
@@ -175,8 +173,6 @@
 	<script id="fragmentShader2" type="x-shader/x-fragment">
 	
 		precision mediump float;
-
-		uniform float time; 
 		
 		uniform vec3 ambient; //general ambient light in the scene applied to all objects
 		
@@ -186,8 +182,12 @@
 		uniform vec3 light1_specular;
 		uniform vec3 light2_specular;
 
+		float spec_intensity = 32.0; //higher value indicates more rapid falloff
+
+		varying vec3 N, L1, L2, V;
+
 		//special data type used to access texture stored on GPU
-		uniform sampler2D t1, t2;
+		uniform sampler2D t1;
 		
 		//changing value - we are using this to mix between the two textures
 		uniform float mixVal;
@@ -196,8 +196,6 @@
 		varying vec2 UV;
 
       	void main() {
-			vec4 c1 = texture2D(t1, UV);
-
 			vec4 outColor1 = vec4(0.0);
 			vec4 outColor2 = vec4(0.0);
 			
@@ -230,13 +228,14 @@
 			if (spec2 > 1.0) {
 				outColor2 = vec4(light2_specular,1.0);
 			} else {
-				outColor2 = clamp(vec4(color2,1.0), 0.0,1.0);
+				outColor2 = clamp(vec4(color2,1.0), 0.0, 1.0);
 			}
 			
-			gl_FragColor = clamp(vec4(ambient, 1.0) + outColor1 + outColor2, 0.0, 1.0); //add the two lights together, make sure final value is between 0.0 and 1.0
+			vec4 temp1 = texture2D(t1, UV);
 
-			gl_FragColor = vec4(mix(c1, mixVal));
-			//gl_FragColor = vec4(1.0,0.0,0.0,1.0);
+			vec4 temp2 = clamp(vec4(ambient, 1.0) + outColor1 + outColor2, 0.0, 1.0); //add the two lights together, make sure final value is between 0.0 and 1.0
+
+			gl_FragColor = vec4(mix(temp1, temp2, mixVal)); 
 		}
 	
 	</script>
@@ -314,6 +313,7 @@
 
 			var mesh1 = new THREE.Mesh(geometry1, material1);
 			mesh1.translateX(-2.0);
+			mesh1.name = "cube";
 			scene.add(mesh1);
 
 			//--------Object 2: textured object w/ Phong shader-----------//
@@ -348,8 +348,15 @@
 
 			// materials (ie, linking to the shader program)
 			var uniforms = {
+				ambient: { type: "v3", value: ambient },
+				light1_pos: { type: "v3", value: light1_pos },
+				light1_diffuse: { type: "v3", value: light1_diffuse },
+				light1_specular: { type: "v3", value: light1_specular },
+				light2_pos: { type: "v3", value: light2_pos },
+				light2_diffuse: { type: "v3", value: light2_diffuse },
+				light2_specular: { type: "v3", value: light2_specular },
 				t1: { type: "t", value: texture  },
-				mixVal: {type: "f", value: 0.0},
+				mixVal: {type: "f", value: 0.2},
 			};
 		
 
@@ -359,11 +366,11 @@
 				fragmentShader: fs2,	
 			} );
 
-
 	      	texMesh = new THREE.Mesh( geometry2, texMaterial );
 			texMesh.translateX(0.0);
 			texMesh.material.side = THREE.DoubleSide; //to render both sides of triangle
-        	scene.add( texMesh );
+        	texMesh.name = "texPlane"
+			scene.add( texMesh );
 
 			//---------Object 3: Unique Mesh w/ Lambert material-------------//
 			function handle_load(geometry, materials){
@@ -419,19 +426,13 @@
 
 			var time = performance.now();
 
-			var object1 = scene.children[0];
+			var object1 = scene.getObjectByName("cube");
 			object1.rotation.x = time * 0.0009;
 			object1.rotation.y = time * 0.0005;
 
-			var object2 = scene.children[1];
+			var object2 = scene.getObjectByName("texPlane");
 			object2.rotation.x = time * 0.0005;
 			object2.rotation.y = time * 0.0009;
-			object2.material.uniforms.time.value = time * 0.002;
-
-			// var object3 = scene.children[2];
-			// object3.rotation.z = time * 0.0007;
-			// object3.rotation.y = time * 0.0003;
-			// object3.material.uniforms.time.value = time * 0.003;
 
 			var unique_obj = scene.getObjectByName("unique_mesh");
 			unique_obj.rotation.z = time * 0.0007;
